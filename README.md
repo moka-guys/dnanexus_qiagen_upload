@@ -1,6 +1,6 @@
 # DNAnexus Qiagen Upload
 
-This is the DNAnexus implementation of [qiagen_upload v1.1.0](https://github.com/moka-guys/qiagen_upload/releases/tag/v1.1.0). For further details on what the underlying script does and produces, please refer to that repository.
+This is the DNAnexus implementation of [qiagen_upload v1.0.0](https://github.com/moka-guys/qiagen_upload/releases/tag/v1.0.0). For further details on what the underlying script does and produces, please refer to that repository.
 
 ## Inputs
 

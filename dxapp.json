@@ -1,6 +1,6 @@
 {
     "name": "qiagen_upload_v1.0.0",
-    "summary": "Sample upload to Qiagen QCII. Creates the required XML file using the sample input, zips the file, and uploads to QCII",
+    "summary": "Sample upload to Qiagen QCII. Implements qiagen_upload_v1.0.0 Creates the required XML file using the sample input, zips the file, and uploads to QCII",
     "properties": {
         "github release": "v1.0.0"
     },
