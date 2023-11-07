@@ -25,6 +25,10 @@ If the app runs in user code generation mode, the following outputs are produced
 * user_code_file - Text file containing user_code key
 * Logfile - for audit trail
 
+## Device Registration
+
+For this app to function, the device must have an active registration in QIAGEN Digital Insights OAuth2 Server. For instructions on how to do this / keep this updated, please refer to KB0010624.
+
 ## How does this app work?
 
 * This app runs a python scripts located inside a docker image. 
