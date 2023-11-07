@@ -1,0 +1,81 @@
+{
+    "name": "qiagen_upload_v1.0.0",
+    "summary": "Sample upload to Qiagen QCII. Creates the required XML file using the sample input, zips the file, and uploads to QCII",
+    "properties": {
+        "github release": "v1.0.0"
+    },
+    "dxapi": "1.0.0",
+    "inputSpec": [
+        {
+            "name": "sample_name",
+            "label": "Sample name",
+            "class": "string",
+            "help": "Name of the sample to be uploaded",
+            "optional": true
+        },
+        {
+            "name": "sample_zip_folder",
+            "label": "Zipped sample folder",
+            "class": "file",
+            "help": "Zipped sample folder containing at a minimum: Variant Output TSV, Copy Number Variants VCF, Merged Small Variants VCF",
+            "optional": true
+        }
+    ],
+    "outputSpec": [
+        {
+            "name": "logfile",
+            "label": "logfile",
+            "class": "file",
+            "help": "Log file for audit trail",
+            "optional": false
+        },
+        {
+            "name": "sample_zip_with_xml",
+            "label": "Sample zip folder with added XML",
+            "class": "file",
+            "help": "Zipped sample folder with added XML file containing names of files being uploaded (XML file is required by Qiagen as part of the upload)",
+            "optional": true
+        },
+        {
+            "name": "code_verifier_file",
+            "label": "Text file containing code_verifier key",
+            "class": "file",
+            "help": "File containing the code verifier key",
+            "optional": true
+        },
+        {
+            "name": "device_code_file",
+            "label": "Text file containing device_code key",
+            "class": "file",
+            "help": "File containing the device code key",
+            "optional": true
+        },
+        {
+            "name": "user_code_file",
+            "label": "Text file containing user_code key",
+            "class": "file",
+            "help": "File containing the user code key",
+            "optional": true
+        }
+    ],
+    "runSpec": {
+        "execDepends": [],
+        "assetDepends": [],
+        "systemRequirements": {
+            "*": {
+                "instanceType": "mem1_ssd1_v2_x2"
+            }
+        },
+        "file": "src/code.sh",
+        "release": "20.04",
+        "version": "0",
+        "interpreter": "bash",
+        "distribution": "Ubuntu"
+    },
+    "access": {
+        "allProjects": "VIEW",
+        "network": [
+            "*"
+        ]
+    }
+}
