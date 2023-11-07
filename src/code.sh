@@ -12,7 +12,7 @@ function main() {
     mkdir -p $LOGFILE_OUTDIR
 
     echo "Getting qiagen_upload docker image"
-    DOCKER_FILEID='project-Gb4PyP00v092z9BG6xkGxvBj:file-Gb4PyZ80v09BK4XXvf6xPP4g'
+    DOCKER_FILEID='project-ByfFPz00jy1fk6PjpZ95F27J:file-Gb54J300jy1pVBFVG6KYZxPb'
     dx download $DOCKER_FILEID
     DOCKER_FILENAME=$(dx describe $DOCKER_FILEID --name)
     # --force-local required as if tarfile name contains a colon it tries to resolve the tarfile to a machine name
@@ -52,8 +52,8 @@ function main() {
         else
             echo "Script is being run in qiagen_upload mode"
             echo "Getting secrets"
-            CODE_VERIFIER=$(dx cat project-Gb4PyP00v092z9BG6xkGxvBj:qiagen_code_verifier)
-            DEVICE_CODE=$(dx cat project-Gb4PyP00v092z9BG6xkGxvBj:qiagen_device_code)
+            CODE_VERIFIER=$(dx cat project-FQqXfYQ0Z0gqx7XG9Z2b4K43:qiagen_code_verifier)
+            DEVICE_CODE=$(dx cat project-FQqXfYQ0Z0gqx7XG9Z2b4K43:qiagen_device_code)
 
             echo "Creating output dir"
             SAMPLE_ZIP_OUTDIR=${OUTDIR}/sample_zip_with_xml/qiagen_upload
