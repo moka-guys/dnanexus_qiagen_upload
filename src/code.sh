@@ -19,11 +19,11 @@ function main() {
     DOCKER_IMAGENAME=$(tar xfO $DOCKER_FILENAME manifest.json --force-local | sed -E 's/.*"RepoTags":\["?([^"]*)"?.*/\1/')
     docker load < "$DOCKER_FILENAME"  # Load docker image
     sudo docker images
-
+    AUTH_PROJ='project-FQqXfYQ0Z0gqx7XG9Z2b4K43'
     echo "Getting secrets"
-    CLIENT_ID=$(dx cat project-FQqXfYQ0Z0gqx7XG9Z2b4K43:qiagen_client_id)
-    CLIENT_SECRET=$(dx cat project-FQqXfYQ0Z0gqx7XG9Z2b4K43:qiagen_client_secret)
-
+    CLIENT_ID=$(dx cat $AUTH_PROJ:qiagen_client_id)
+    CLIENT_SECRET=$(dx cat $AUTH_PROJ:qiagen_client_secret)
+    AUTH_TOKEN=$(dx cat project-FQqXfYQ0Z0gqx7XG9Z2b4K43:mokaguys_nexus_auth_key)
 
     mkdir -p $LOGFILE_OUTDIR $CODE_VERIFIER_OUTDIR $DEVICE_CODE_OUTDIR $USER_CODE_OUTDIR $SAMPLE_ZIP_OUTDIR # Create out dir
 
@@ -44,20 +44,50 @@ function main() {
             echo "Running docker cmd"
             eval $DOCKER_CMD
 
+            # to do dx upload need to reset worker variable
+            unset DX_WORKSPACE_ID
+            CURRENT_PROJECT=$DX_PROJECT_CONTEXT_ID
+            # set the project the worker will upload to
+            dx cd $AUTH_PROJ
+
+            echo "Checking if code_verifier file exists in 001_Auth project"
+            if [[ $(dx cat $AUTH_PROJ:qiagen_code_verifier*) ]];
+                then
+                    echo "Removing existing code_verifier file from 001_Auth"
+                    dx rm -f $AUTH_PROJ:qiagen_code_verifier* --auth-token ${AUTH_TOKEN}
+                else
+                    echo "code_verifier file is not present in 001_Auth project"
+            fi
+            echo "Checking if device_code file exists in 001_Auth project"
+            if [[ $(dx cat $AUTH_PROJ:qiagen_device_code*) ]];
+                then
+                    echo "Removing existing device_code file from 001_Auth"
+                    dx rm -f $AUTH_PROJ:qiagen_device_code* --auth-token ${AUTH_TOKEN}
+                else
+                    echo "device_code file is not present in 001_Auth project"
+            fi
+
+            echo "Uploading new code verifier and device code files to 001_Auth project"
+            dx upload ${OUTDIR}/qiagen_code_verifier*
+            dx upload ${OUTDIR}/qiagen_device_code*
+
+            # set the project the worker will upload to
+            dx cd $CURRENT_PROJECT
+
             echo "Moving outputs into output folders to delocalise into dnanexus project"
             mv ${OUTDIR}/*.log $LOGFILE_OUTDIR
             mv ${OUTDIR}/qiagen_device_code* $DEVICE_CODE_OUTDIR
             mv ${OUTDIR}/qiagen_user_code* $USER_CODE_OUTDIR
-            mv ${OUTDIR}/qiagen_code_verifier* $CODE_VERIFIER_OUTDIR 
+            mv ${OUTDIR}/qiagen_code_verifier* $CODE_VERIFIER_OUTDIR
         else
             echo "Script is being run in qiagen_upload mode"
             echo "Getting secrets"
-            CODE_VERIFIER=$(dx cat project-FQqXfYQ0Z0gqx7XG9Z2b4K43:qiagen_code_verifier)
-            DEVICE_CODE=$(dx cat project-FQqXfYQ0Z0gqx7XG9Z2b4K43:qiagen_device_code)
+            CODE_VERIFIER=$(dx cat $AUTH_PROJ:qiagen_code_verifier*)
+            DEVICE_CODE=$(dx cat $AUTH_PROJ:qiagen_device_code*)
 
             echo "Creating output dir"
-            SAMPLE_ZIP_OUTDIR=${OUTDIR}/sample_zip_with_xml/qiagen_upload
-            mkdir -p $SAMPLE_ZIP_OUTDIR
+            XML_OUTDIR=${OUTDIR}/sample_xml/qiagen_upload
+            mkdir -p $XML_OUTDIR
 
             echo "Generating docker cmd"
             DOCKER_CMD="docker run --rm -v $sample_zip_folder_path:/qiagen_upload/$sample_zip_folder_name -v $OUTDIR:/qiagen_upload/outputs/ $DOCKER_IMAGENAME qiagen_upload -S $sample_name -Z /qiagen_upload/$sample_zip_folder_name -CI $CLIENT_ID -CS $CLIENT_SECRET -C $CODE_VERIFIER -D $DEVICE_CODE"
@@ -68,7 +98,8 @@ function main() {
             echo "Moving outputs into output folders to delocalise into dnanexus project"
             ls $OUTDIR
             mv ${OUTDIR}/*.log $LOGFILE_OUTDIR
-            mv ${OUTDIR}/*.zip $SAMPLE_ZIP_OUTDIR   
+            unzip ${OUTDIR}/*.zip -d $OUTDIR
+            mv ${OUTDIR}/*.xml $XML_OUTDIR
     fi
 
     dx-upload-all-outputs --parallel

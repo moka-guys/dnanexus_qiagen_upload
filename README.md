@@ -16,7 +16,7 @@ If no sample_zip_folder and sample_name is provided, the app will run in user co
 ## Outputs
 
 If the app runs in upload mode, the following outputs are produced:
-* sample_zip_with_xml- Zipped sample folder with added XML file containing names of files being uploaded (XML file is required by Qiagen as part of the upload)
+* sample_xml - XML file created that was added to the zip folder for sample upload (XML file is required by Qiagen as part of the upload)
 * logfile - for audit trail
 
 If the app runs in user code generation mode, the following outputs are produced:

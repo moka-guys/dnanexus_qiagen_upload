@@ -30,10 +30,10 @@
             "optional": false
         },
         {
-            "name": "sample_zip_with_xml",
-            "label": "Sample zip folder with added XML",
+            "name": "sample_xml",
+            "label": "XML file created for sample upload",
             "class": "file",
-            "help": "Zipped sample folder with added XML file containing names of files being uploaded (XML file is required by Qiagen as part of the upload)",
+            "help": "XML file created that was added to the zip folder for sample upload (XML file is required by Qiagen as part of the upload)",
             "optional": true
         },
         {
@@ -73,7 +73,7 @@
         "distribution": "Ubuntu"
     },
     "access": {
-        "allProjects": "VIEW",
+        "allProjects": "UPLOAD",
         "network": [
             "*"
         ]
